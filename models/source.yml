@@ -1,0 +1,9 @@
+version: 2
+
+sources:
+  - name: online_retail
+    database: gcp-dbt-online-retail
+    schema: raw_online_retail
+    tables:
+      - name: raw_data
+        identifier: raw_online_retail
