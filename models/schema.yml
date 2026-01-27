@@ -1,2 +1,40 @@
 models:
     - name: src_online_retail
+      description: "This is a transactional data set which contains all the transactions occurring between 01/12/2010 and 09/12/2011 for a UK-based and registered non-store online retail.The company mainly sells unique all-occasion gifts. Many customers of the company are wholesalers"
+      columns:
+        - name: row_hash
+          data_type: string
+          description: "SHA256 hash of all columns in the source table to ensure data integrity"
+        - name: invoice_no
+          data_type: string
+          description: "a 6-digit integral number uniquely assigned to each transaction. If this code starts with letter 'c', it indicates a cancellation"
+        - name: stock_code
+          data_type: string
+          description: "a 5-digit integral number uniquely assigned to each distinct product"
+        - name: description
+          data_type: string
+          description: "product name"
+        - name: quantity
+          data_type: integer
+          description: "the quantities of each product (item) per transaction"
+        - name: invoice_date
+          data_type: string
+          description: "the day and time when each transaction was generated"
+        - name: unit_price
+          data_type: FLOAT
+          description: "product price per unit in sterling"
+        - name: customer_id
+          data_type: string
+          description: "a 5-digit integral number uniquely assigned to each customer"
+        - name: country
+          data_type: string
+          description: "the name of the country where each customer resides"
+        - name: -created_at
+          data_type: string
+          description: "the timestamp when the record was ingested into the data warehouse"
+
+
+
+
+
+ 
