@@ -1,8 +1,10 @@
 {{ 
   config(
     materialized='incremental',
+    tags = ["source"],
     on_schema_change='ignore',
     incremental_strategy='merge',
+    unique_key='row_hash',
     partition_by={
       "field": "created_at",
       "data_type": "timestamp",
@@ -44,3 +46,24 @@ SELECT
   Country     AS country,
   CURRENT_TIMESTAMP() AS created_at
 FROM raw_data
+WHERE 1=1
+
+{% if is_incremental() %}
+  {% if var("start_date", none) and var("end_date", none) %}
+    {{ log(
+      'Loading ' ~ this ~ ' incrementally (start_date: ' ~ var("start_date") ~ ', end_date: ' ~ var("end_date") ~ ')',
+      info=true
+    ) }}
+    AND invoice_date BETWEEN TIMESTAMP('{{ var("start_date") }}')
+                         AND TIMESTAMP('{{ var("end_date") }}')
+  {% else %}
+    {{ log(
+      'Loading ' ~ this ~ ' incrementally (based on max invoice_date in target table)',
+      info=true
+    ) }}
+    AND invoice_date > (
+      SELECT COALESCE(MAX(invoice_date), TIMESTAMP('1900-01-01'))
+      FROM {{ this }}
+    )
+  {% endif %}
+{% endif %}
