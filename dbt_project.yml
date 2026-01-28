@@ -34,3 +34,10 @@ models:
     source:
       +materialized: view
       +static_analysis: off
+    staging: 
+      +schema: staging_online_retail
+      +materialized: table
+      +static_analysis: off
+    dimensions:
+      +schema: dim_online_retail
+      +materialized: table
