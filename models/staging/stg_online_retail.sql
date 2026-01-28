@@ -38,6 +38,7 @@ SELECT
   invoice_no,
   stock_code,
   description,
+  order_status,
   quantity,
   invoice_date,
   unit_price,
