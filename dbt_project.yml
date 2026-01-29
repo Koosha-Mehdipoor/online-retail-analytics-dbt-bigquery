@@ -41,3 +41,6 @@ models:
     dimensions:
       +schema: dim_online_retail
       +materialized: table
+    facts:
+      +schema: fact_online_retail
+      +materialized: table
