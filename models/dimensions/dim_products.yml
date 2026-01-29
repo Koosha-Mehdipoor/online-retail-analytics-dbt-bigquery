@@ -1,0 +1,58 @@
+version: 2
+
+models:
+  - name: dim_products
+    description: >
+      Product aggregation model at the grain of one row per (stock_code, description, unit_price).
+      Includes first/last sold dates and sales metrics derived from transaction line items.
+      Note: description and unit_price may vary over time for the same stock_code; this model
+      keeps separate rows per observed combination.
+    columns:
+      - name: stock_code
+        description: "Product identifier from the source system."
+        tests:
+          - not_null
+
+      - name: description
+        description: "Product description associated with this stock_code record."
+        tests:
+          - not_null
+
+      - name: first_sold_date
+        description: "Earliest invoice_date where this product record appears."
+        tests:
+          - not_null
+
+      - name: last_sold_date
+        description: "Latest invoice_date where this product record appears."
+        tests:
+          - not_null
+
+      - name: unit_price
+        description: "Unit price in GBP for this product record."
+        tests:
+          - not_null
+
+      - name: total_orders
+        description: "Number of distinct invoices that include this product record."
+        tests:
+          - not_null
+
+      - name: total_registered_customers
+        description: >
+          Number of distinct registered customers (customer_id != 'Not Registered') who purchased
+          this product record.
+        tests:
+          - not_null
+
+      - name: total_guest_orders
+        description: >
+          Number of distinct invoices that include this product record where customer_id is
+          'Not Registered'. This is a guest-order count (not a distinct guest-customer count).
+        tests:
+          - not_null
+
+      - name: total_quantity_sold
+        description: "Total quantity across all transaction line items for this product record."
+        tests:
+          - not_null

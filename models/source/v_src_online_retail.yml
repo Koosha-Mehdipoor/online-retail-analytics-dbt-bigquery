@@ -1,0 +1,73 @@
+version: 2
+
+models:
+  - name: v_src_online_retail
+    description: >
+      Source view over src_online_retail that applies light standardization: trims text fields,
+      fills missing descriptions, derives order_status from invoice_no/stock_code, parses the raw
+      invoice_date string into invoice_date (DATE) and invoice_time (TIME), and labels missing
+      customer_id and country values.
+    config:
+      tags: ["source"]
+    columns:
+      - name: invoice_no
+        description: >
+          Invoice identifier. If it starts with 'C', it indicates a cancellation (used in order_status).
+        tests:
+          - not_null
+
+      - name: stock_code
+        description: "Product identifier from the source system."
+        tests:
+          - not_null
+
+      - name: description
+        description: "Product description; NULLs are replaced with 'Not Defined'."
+        tests:
+          - not_null
+
+      - name: order_status
+        description: >
+          Derived order status:
+          - cancelled: invoice_no starts with 'C' and stock_code != 'D'
+          - discounted: invoice_no starts with 'C' and stock_code = 'D'
+          - active: otherwise
+        tests:
+          - not_null
+
+      - name: quantity
+        description: >
+          Quantity of items on the transaction line. Negative values can represent cancellations/returns
+          in the source data.
+        tests:
+          - not_null
+
+      - name: invoice_date
+        description: "Parsed invoice date (DATE) from the raw invoice_date string."
+        tests:
+          - not_null
+
+      - name: invoice_time
+        description: "Parsed invoice time (TIME) from the raw invoice_date string."
+        tests:
+          - not_null
+
+      - name: unit_price
+        description: "Unit price in GBP."
+        tests:
+          - not_null
+
+      - name: customer_id
+        description: "Customer identifier; NULLs are replaced with 'Not Registered'."
+        tests:
+          - not_null
+
+      - name: country
+        description: "Country; NULLs are replaced with 'Unknown'."
+        tests:
+          - not_null
+
+      - name: created_at
+        description: "Ingestion timestamp from the bronze layer."
+        tests:
+          - not_null

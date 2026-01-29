@@ -1,0 +1,58 @@
+version: 2
+
+models:
+  - name: dim_customers
+    description: >
+      Customer dimension at the grain of one row per customer_id. Includes derived
+      behavioral metrics (first/last order date, total orders, total spend, AOV) and
+      two country attributes: most_frequent_country and last_country.
+    columns:
+      - name: customer_id
+        description: >
+          Customer identifier from the source (note: missing IDs may be represented
+          as 'Not Registered' depending on staging logic).
+        tests:
+          - not_null
+          - unique
+
+      - name: first_order_date
+        description: "Date of the first observed invoice for the customer."
+        tests:
+          - not_null
+
+      - name: last_order_date
+        description: "Date of the last observed invoice for the customer."
+        tests:
+          - not_null
+
+      - name: total_value
+        description: "Total monetary value of all invoices for the customer (sum of quantity * unit_price)."
+
+      - name: total_orders
+        description: "Number of distinct invoices for the customer."
+        tests:
+          - not_null
+
+      - name: total_quantity
+        description: "Total quantity of items purchased across all invoice lines for the customer."
+
+      - name: avg_order_value
+        description: >
+          Average order value (AOV) computed as the average of invoice-level totals,
+          where each invoice total is SUM(quantity * unit_price) for that invoice.
+        tests:
+          - not_null
+
+      - name: most_frequent_country
+        description: >
+          Customer's most frequently observed country across transactions. Derived from
+          transaction records; used as a stable 'primary country' attribute.
+        tests:
+          - not_null
+
+      - name: last_country
+        description: >
+          Customer's most recently observed country based on the latest transaction
+          timestamp (invoice_date), with a deterministic tie-breaker where applicable.
+        tests:
+          - not_null

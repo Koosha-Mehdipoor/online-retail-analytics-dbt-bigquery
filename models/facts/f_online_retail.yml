@@ -1,0 +1,71 @@
+version: 2
+
+models:
+  - name: f_online_retail
+    description: >
+      Fact table at transaction line-item grain sourced from stg_online_retail. Includes derived
+      measures for sales, returns, and net amount based on quantity * unit_price. Country is kept
+      on the fact to preserve transaction geography even when customer_id is missing/labelled.
+    config:
+      tags: ["facts"]
+    columns:
+      - name: row_hash
+        description: "Stable row identifier inherited from stg_online_retail; uniquely identifies a transaction line."
+        tests:
+          - not_null
+          - unique
+
+      - name: invoice_date_id
+        description: "Surrogate date key in YYYYMMDD format (INT64) derived in staging."
+        tests:
+          - not_null
+
+      - name: invoice_no
+        description: "Invoice identifier for the transaction."
+        tests:
+          - not_null
+
+      - name: stock_code
+        description: "Product identifier for the line item."
+        tests:
+          - not_null
+
+      - name: quantity
+        description: >
+          Quantity on the line item. Positive indicates a sale; negative indicates a return/cancellation
+          in the source data.
+        tests:
+          - not_null
+
+      - name: order_status
+        description: "Order status derived upstream (active/cancelled/discounted)."
+        tests:
+          - not_null
+
+      - name: customer_id
+        description: >
+          Customer identifier. Missing IDs may be labelled (e.g., 'Not Registered') in the source view/staging.
+        tests:
+          - not_null
+
+      - name: country
+        description: "Transaction country on the line item."
+        tests:
+          - not_null
+
+      - name: sales_amount
+        description: "Sales amount for positive-quantity lines only: quantity * unit_price, else 0."
+        tests:
+          - not_null
+
+      - name: return_amount
+        description: >
+          Return/cancellation amount for negative-quantity lines only: quantity * unit_price, else 0.
+          Note: this value is negative under the current logic.
+        tests:
+          - not_null
+
+      - name: net_amount
+        description: "Net line amount (quantity * unit_price), where returns/cancellations are negative."
+        tests:
+          - not_null

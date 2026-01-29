@@ -1,0 +1,81 @@
+version: 2
+
+models:
+  - name: stg_online_retail
+    description: >
+      Staging model for Online Retail transactions. Standardizes and types key fields, creates a
+      stable row-level hash (row_hash) for deduplication and incremental merge, and generates a
+      surrogate date key (invoice_date_id). Null customer IDs and countries may already be
+      labelled upstream in v_src_online_retail.
+    config:
+      tags: ["staging"]
+    columns:
+      - name: row_hash
+        description: >
+          SHA256 hash (hex) of selected business columns (trimmed/cast) used as the unique key for
+          incremental MERGE and for deduplication.
+        tests:
+          - not_null
+          - unique
+
+      - name: invoice_date_id
+        description: "Surrogate date key in YYYYMMDD format (INT64) derived from invoice_date."
+        tests:
+          - not_null
+
+      - name: invoice_no
+        description: >
+          Transaction/invoice identifier. Values starting with 'C' indicate cancellations (as used
+          in upstream order_status logic).
+        tests:
+          - not_null
+
+      - name: stock_code
+        description: "Product identifier from the source system."
+        tests:
+          - not_null
+
+      - name: description
+        description: "Product description (may be coalesced upstream if missing)."
+        tests:
+          - not_null
+
+      - name: order_status
+        description: "Derived order status (e.g., active/cancelled/discounted) from invoice_no and stock_code."
+        tests:
+          - not_null
+
+      - name: quantity
+        description: >
+          Quantity for the line item. Negative values can represent cancellations/returns in the
+          source data.
+        tests:
+          - not_null
+
+      - name: invoice_date
+        description: "Parsed invoice date (DATE) extracted from the original datetime string."
+        tests:
+          - not_null
+
+      - name: unit_price
+        description: "Unit price in GBP."
+        tests:
+          - not_null
+
+      - name: customer_id
+        description: >
+          Customer identifier. May be labelled (e.g., 'Not Registered') upstream when missing to
+          support consistent joins.
+        tests:
+          - not_null
+
+      - name: country
+        description: >
+          Country on the transaction. May be labelled (e.g., 'Unknown') upstream when missing.
+        tests:
+          - not_null
+
+      - name: created_at
+        description: "Warehouse ingestion timestamp for the record."
+        tests:
+          - not_null

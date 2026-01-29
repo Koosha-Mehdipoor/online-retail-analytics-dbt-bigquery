@@ -1,0 +1,56 @@
+version: 2
+
+models:
+  - name: src_online_retail
+    description: >
+      Bronze/source model that ingests raw Online Retail records from the BigQuery source table
+      (online_retail.raw_data) with minimal transformation. Columns are renamed to snake_case and
+      an ingestion timestamp (created_at) is added. This model is incremental and partitioned by
+      created_at (day).
+    config:
+      tags: ["source"]
+    columns:
+      - name: invoice_no
+        description: >
+          Invoice identifier from the source file. Typically a 6-digit code; values starting with
+          'C' indicate cancellations in the original dataset.
+        tests:
+          - not_null
+
+      - name: stock_code
+        description: "Product identifier from the source file."
+        tests:
+          - not_null
+
+      - name: description
+        description: "Product description as provided in the source file (may contain NULLs)."
+
+      - name: quantity
+        description: >
+          Quantity of items on the transaction line. Negative values can represent cancellations/returns
+          in the source data.
+        tests:
+          - not_null
+
+      - name: invoice_date
+        description: "Invoice datetime as provided in the source table (raw type from ingestion)."
+        tests:
+          - not_null
+
+      - name: unit_price
+        description: "Unit price in GBP as provided in the source file."
+        tests:
+          - not_null
+
+      - name: customer_id
+        description: "Customer identifier as provided in the source file (nullable)."
+
+      - name: country
+        description: "Country as provided in the source file."
+        tests:
+          - not_null
+
+      - name: created_at
+        description: "Ingestion timestamp generated at load time (CURRENT_TIMESTAMP())."
+        tests:
+          - not_null

@@ -1,0 +1,29 @@
+version: 2
+
+models:
+  - name: eph_most_frequent_country
+    description: >
+      Ephemeral helper model that derives two country attributes for each customer_id:
+      (1) most_frequent_country (mode) based on transaction frequency, and
+      (2) last_country based on the most recent transaction (invoice_date, invoice_no).
+      Materialized as ephemeral, so it is inlined into downstream models at compile time.
+    columns:
+      - name: customer_id
+        description: "Customer identifier (NULL customer_ids are excluded in this model)."
+        tests:
+          - not_null
+          - unique
+
+      - name: most_frequent_country
+        description: >
+          Customer's most frequently observed country across all transactions. Computed by
+          counting occurrences per country and selecting the highest-frequency country.
+        tests:
+          - not_null
+
+      - name: last_country
+        description: >
+          Customer's most recently observed country based on the latest transaction,
+          ordered by invoice_date descending and invoice_no descending as a tie-breaker.
+        tests:
+          - not_null
