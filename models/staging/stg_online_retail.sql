@@ -34,7 +34,7 @@ SELECT
       )
     )
   ) AS row_hash,
-  FORMAT_DATE('%Y%m%d', invoice_date) AS invoice_date_id,
+  CAST(FORMAT_DATE('%Y%m%d', invoice_date) AS INT64) AS invoice_date_id,
   invoice_no,
   stock_code,
   description,
@@ -55,15 +55,15 @@ QUALIFY ROW_NUMBER() OVER (PARTITION BY row_hash ORDER BY invoice_date_id DESC) 
       'Loading ' ~ this ~ ' incrementally (start_date: ' ~ var("start_date") ~ ', end_date: ' ~ var("end_date") ~ ')',
       info=true
     ) }}
-    AND invoice_date BETWEEN TIMESTAMP('{{ var("start_date") }}')
-                         AND TIMESTAMP('{{ var("end_date") }}')
+    AND invoice_date BETWEEN DATE('{{ var("start_date") }}')
+                         AND DATE('{{ var("end_date") }}')
   {% else %}
     {{ log(
       'Loading ' ~ this ~ ' incrementally (based on max invoice_date in target table)',
       info=true
     ) }}
     AND invoice_date > (
-      SELECT COALESCE(MAX(invoice_date), TIMESTAMP('1900-01-01'))
+      SELECT COALESCE(MAX(invoice_date), DATE('1900-01-01'))
       FROM {{ this }}
     )
   {% endif %}
