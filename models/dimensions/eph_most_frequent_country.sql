@@ -27,7 +27,8 @@ LAST_COUNTRY AS (
         country AS last_country
 
         FROM {{ ref('stg_online_retail') }}
-        QUALIFY ROW_NUMBER() OVER (PARTITION BY customer_id,country ORDER BY invoice_date DESC, invoice_no DESC) = 1
+        WHERE customer_id IS NOT NULL
+        QUALIFY ROW_NUMBER() OVER (PARTITION BY customer_id ORDER BY invoice_date DESC, invoice_no DESC) = 1
         )
 
 SELECT 
