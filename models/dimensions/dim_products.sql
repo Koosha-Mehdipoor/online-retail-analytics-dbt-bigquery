@@ -14,7 +14,8 @@ SELECT
     MAX(invoice_date) AS last_sold_date,
     unit_price,
     COUNT(DISTINCT invoice_no) AS total_orders,
-    COUNT(customer_id) AS total_customers,
+    COUNT(DISTINCT CASE WHEN customer_id != 'Not Registered' THEN customer_id END)AS total_registered_customers,
+    COUNT(DISTINCT CASE WHEN customer_id = 'Not Registered' THEN invoice_no END) AS total_guest_orders,
     SUM(quantity) AS total_quantity_sold
 FROM {{ ref('stg_online_retail') }}
 GROUP BY
