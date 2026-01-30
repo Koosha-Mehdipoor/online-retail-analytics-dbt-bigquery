@@ -44,3 +44,6 @@ models:
     facts:
       +schema: fact_online_retail
       +materialized: table
+    mart:
+      +schema: mart_online_retail
+      +materialized: view
