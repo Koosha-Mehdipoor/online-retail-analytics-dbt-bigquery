@@ -18,4 +18,4 @@ SELECT f.*,
 FROM {{ ref ('f_online_retail') }} AS f
 JOIN {{ ref ('dim_dates') }} AS d
     ON f.invoice_date_id = d.date_id
-WHERE d.date >= DATE_SUB(CURRENT_DATE(), INTERVAL 1 YEAR)
+WHERE d.date >= DATE_SUB((SELECT MAX(invoice_date) FROM {{ ref('stg_online_retail') }}), INTERVAL 1 YEAR)
