@@ -23,7 +23,7 @@ FROM {{ ref('stg_online_retail') }}
 ),
 dim_product AS (
     SELECT 
-    stock_code,
+    UPPER(TRIM(stock_code)) AS stock_code,
     MIN(invoice_date) AS first_sold_date,
     MAX(invoice_date) AS last_sold_date,
     COUNT(DISTINCT invoice_no) AS total_orders,
