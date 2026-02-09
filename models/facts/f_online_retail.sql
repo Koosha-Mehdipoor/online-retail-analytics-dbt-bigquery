@@ -10,7 +10,7 @@ SELECT
 row_hash,
 invoice_date_id,
 invoice_no,
-stock_code,
+upper(TRIM(stock_code)) AS stock_code,
 quantity,
 order_status,
 customer_id,
