@@ -25,6 +25,10 @@ models:
         description: "Product description; NULLs are replaced with 'Not Defined'."
         tests:
           - not_null
+      - name: product_display
+        description: "Make unqique description of product"
+        tests:
+          - not_null
 
       - name: order_status
         description: >
