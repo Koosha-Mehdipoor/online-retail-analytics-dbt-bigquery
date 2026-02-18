@@ -11,6 +11,20 @@ star-schema design, and business-oriented analytics.
 
 ---
 
+## 📂 Dataset
+
+Source: UCI Machine Learning Repository  
+Online Retail Data Set  
+https://archive.ics.uci.edu/ml/datasets/Online+Retail
+
+This dataset contains transactional data for a UK-based online retail company
+covering the period 01/12/2010 to 09/12/2011.
+
+The data includes invoice numbers, product identifiers, quantities, prices,
+customer IDs, and country information, making it suitable for transactional,
+dimensional, and historical modeling use cases.
+
+
 ## 🏗 Architecture Overview
 
 The project follows a layered modeling structure:
