@@ -237,6 +237,6 @@ See the `LICENSE` file for full license details.
 
 ## 👤 Author
 
-Koosha  
+Koosha Mehdipoor
 Data Analytics & Engineering Portfolio Project
 
