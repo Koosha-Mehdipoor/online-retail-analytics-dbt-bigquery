@@ -33,7 +33,7 @@ The project follows a layered modeling structure:
 - Incremental ingestion from upstream source
 - Append-only structure
 - Partitioned by ingestion timestamp
-- Minimal transformation (system-of-record layer)
+- Minimal transformation
 
 ### 2️⃣ Source Standardization (`v_src_online_retail`)
 - Trimmed text fields
