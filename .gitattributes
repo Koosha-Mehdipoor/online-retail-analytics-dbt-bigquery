@@ -1,4 +1,7 @@
 Dockerfile linguist-vendored
 docker-compose.yml linguist-vendored
-*.yml linguist-vendored
+packages.yml linguist-vendored
+package-lock.yml linguist-vendored
+dbt_project.yml linguist-vendored
+profiles.yml linguist-vendored
 *.sql linguist-language=SQL
