@@ -1,3 +1,4 @@
 Dockerfile linguist-vendored
 docker-compose.yml linguist-vendored
 *.yml linguist-vendored
+*.sql linguist-language=SQL
